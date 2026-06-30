@@ -1,6 +1,6 @@
 # Screen Recapture Detector (frauddetector)
 
-[![Live Demo](https://img.shields.io/badge/🚀_Live_)](https://huggingface.co/spaces/sthrrrr/frauddetector)
+https://huggingface.co/spaces/sthrrrr/frauddetector
 [![Python](https://img.shields.io/badge/Python-3.11-blue?style=flat-square&logo=python)](https://python.org)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.21-orange?style=flat-square&logo=tensorflow)](https://tensorflow.org)
 [![Flask](https://img.shields.io/badge/Flask-3.0-lightgrey?style=flat-square&logo=flask)](https://flask.palletsprojects.com)
