@@ -1,4 +1,9 @@
-# Screen Recapture Detector(frauddetector)
+# Screen Recapture Detector (frauddetector)
+
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Render-purple?style=for-the-badge)](https://frauddetector.onrender.com)
+[![Python](https://img.shields.io/badge/Python-3.11-blue?style=flat-square&logo=python)](https://python.org)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.21-orange?style=flat-square&logo=tensorflow)](https://tensorflow.org)
+[![Flask](https://img.shields.io/badge/Flask-3.0-lightgrey?style=flat-square&logo=flask)](https://flask.palletsprojects.com)
 
 A lightweight hybrid computer vision pipeline for detecting whether an image is:
 
@@ -6,6 +11,26 @@ A lightweight hybrid computer vision pipeline for detecting whether an image is:
 - **SCREEN** – a photograph of another screen (phone, laptop, monitor, tablet, etc.).
 
 The solution was built for a take-home Computer Vision / Machine Learning assignment with an emphasis on accuracy, speed, and low inference cost.
+
+---
+
+## 🚀 Live Demo
+
+**[→ Try the live demo on Render](https://frauddetector.onrender.com)**
+
+Upload an image or use your camera to instantly detect whether it's a genuine photograph or a photo of a screen.
+
+<p align="center">
+  <img src="static/demo_screenshot.jpg" alt="Demo Screenshot" width="400">
+</p>
+
+### Features
+
+- 📤 Drag & drop / file upload
+- 📷 Camera capture (desktop + mobile)
+- ⚡ Real-time inference with probability & confidence gauge
+- 🌙 Dark mode glassmorphism UI
+- 📱 Fully responsive (mobile-friendly)
 
 ---
 
@@ -30,20 +55,33 @@ These complementary features are fused before the final classification layer.
 
 ```
 .
-├── dataset/
-│   ├── real/
-│   └── screen/
+├── app.py                    # Flask web application
+├── predict.py                # Prediction pipeline
+├── train_combined.py         # Model training
+├── moire_feature.py          # FFT moiré feature extraction
+├── evaluate.py               # Evaluation script
 │
 ├── model/
 │   ├── screen_detector_combined.keras
 │   ├── moire_norm.npy
 │   └── best_threshold.npy
 │
-├── predict.py
-├── train_combined.py
-├── moire_feature.py
-├── evaluate.py
-├── requirements.txt
+├── templates/
+│   └── index.html            # Web UI
+│
+├── static/
+│   ├── style.css             # Dark glassmorphism theme
+│   ├── app.js                # Frontend logic
+│   └── favicon.svg           # App icon
+│
+├── dataset/
+│   ├── real/
+│   └── screen/
+│
+├── requirements.txt          # ML dependencies
+├── demo_requirements.txt     # ML + web server dependencies
+├── render.yaml               # Render deployment config
+├── runtime.txt               # Python version
 ├── REPORT.md
 └── README.md
 ```
@@ -64,6 +102,42 @@ Install dependencies.
 ```bash
 pip install -r requirements.txt
 ```
+
+---
+
+## Run the Web Demo Locally
+
+Install the demo dependencies (includes Flask + Gunicorn).
+
+```bash
+pip install -r demo_requirements.txt
+```
+
+Start the Flask development server.
+
+```bash
+python app.py
+```
+
+Open [http://localhost:5000](http://localhost:5000) in your browser.
+
+> **Note:** On macOS, port 5000 may be used by AirPlay Receiver. Use `PORT=5050 python app.py` as an alternative.
+
+---
+
+## Deploy to Render
+
+1. Push this repository to GitHub.
+2. Go to [Render Dashboard](https://dashboard.render.com/).
+3. Click **New → Blueprint** and connect this repository.
+4. Render will auto-detect `render.yaml` and deploy.
+
+Or deploy manually:
+
+1. **New → Web Service** → connect GitHub repo.
+2. **Build command:** `pip install -r demo_requirements.txt`
+3. **Start command:** `gunicorn app:app --bind 0.0.0.0:$PORT --timeout 120 --workers 1`
+4. Set environment variable `PYTHON_VERSION` = `3.11.9`.
 
 ---
 

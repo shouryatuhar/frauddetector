@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AI-powered screen recapture fraud detector. Upload an image to detect if it's a genuine photo or a photo of a screen.">
+  <title>Screen Recapture Detector — AI Fraud Detection</title>
+  <link rel="icon" type="image/svg+xml" href="/static/favicon.svg">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <!-- Ambient background blobs -->
+  <div class="ambient-bg"></div>
+
+  <div class="container">
+
+    <!-- ===== Header ===== -->
+    <header class="header">
+      <div class="header__badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        </svg>
+        AI-Powered Detection
+      </div>
+      <h1 class="header__title">Screen Recapture<br>Detector</h1>
+      <p class="header__subtitle">
+        Detect whether an image is a genuine photograph or a photo of another screen.
+        Powered by a hybrid MobileNetV3 + FFT moiré analysis pipeline.
+      </p>
+    </header>
+
+    <!-- ===== Upload Card ===== -->
+    <div class="card">
+
+      <!-- Drop zone -->
+      <div class="upload-zone" id="drop-zone">
+        <div class="upload-zone__icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <p class="upload-zone__title">Drop an image here or click to browse</p>
+        <p class="upload-zone__hint">Supports JPG, PNG, WebP · Max 16 MB</p>
+        <input type="file" id="file-input" accept="image/*">
+      </div>
+
+      <!-- Preview -->
+      <div class="preview-wrapper" id="preview-wrapper">
+        <div class="preview-container">
+          <img id="preview-img" alt="Preview" style="display:none;">
+          <video id="preview-video" autoplay playsinline muted style="display:none;"></video>
+          <span class="preview-label" id="preview-label"></span>
+        </div>
+      </div>
+
+      <!-- Camera controls (shown when camera is active) -->
+      <div class="camera-controls" id="camera-controls">
+        <button class="btn btn--primary" id="btn-capture">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <circle cx="12" cy="12" r="4"/>
+          </svg>
+          Take Photo
+        </button>
+        <button class="btn btn--secondary" id="btn-stop-cam">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+          Cancel
+        </button>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="actions-row">
+        <button class="btn btn--primary" id="btn-predict" disabled>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+          Predict
+        </button>
+        <button class="btn btn--camera" id="btn-camera">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/>
+            <circle cx="12" cy="13" r="4"/>
+          </svg>
+          Camera
+        </button>
+        <button class="btn btn--reset" id="btn-reset" title="Reset">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 105.64-11.36L1 10"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- ===== Result Section ===== -->
+      <div class="result-section" id="result-section">
+
+        <!-- Badge -->
+        <div class="result-badge">
+          <span class="result-badge__label" id="result-badge-label"></span>
+        </div>
+
+        <!-- Gauge -->
+        <div class="gauge-container">
+          <div class="gauge" id="gauge">
+            <div class="gauge__inner">
+              <span class="gauge__value" id="gauge-value">0%</span>
+              <span class="gauge__sublabel">Confidence</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card__label">Probability</div>
+            <div class="stat-card__value stat-card__value--prob" id="prob-value">—</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__label">Inference Time</div>
+            <div class="stat-card__value stat-card__value--time" id="time-value">—</div>
+          </div>
+        </div>
+
+        <!-- Confidence bar -->
+        <div class="confidence-section">
+          <div class="confidence-header">
+            <span class="confidence-header__label">Confidence</span>
+            <span class="confidence-header__value" id="conf-value">0%</span>
+          </div>
+          <div class="confidence-track">
+            <div class="confidence-fill" id="conf-fill"></div>
+          </div>
+        </div>
+
+        <!-- Explanation -->
+        <div class="explanation">
+          <div class="explanation__icon" id="explanation-icon">🔍</div>
+          <p class="explanation__text" id="explanation-text"></p>
+        </div>
+
+      </div><!-- /result-section -->
+    </div><!-- /card -->
+
+    <!-- ===== Footer ===== -->
+    <footer class="footer">
+      <p>Built by <strong>Shourya Tuhar</strong> · MobileNetV3 + FFT Moiré Analysis</p>
+      <p style="margin-top:6px;">
+        <a href="https://github.com/shouryatuhar/frauddetector" target="_blank" rel="noopener">GitHub</a>
+      </p>
+    </footer>
+
+  </div>
+
+  <div class="loading-overlay" id="loading-overlay">
+    <div class="spinner"></div>
+    <div class="loading-text">Analyzing image…</div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

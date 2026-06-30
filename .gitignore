@@ -9,3 +9,6 @@ predictions.csv
 *.ipynb
 
 *.csv
+
+# Web demo
+uploads/
