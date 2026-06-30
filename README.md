@@ -1,6 +1,6 @@
 # Screen Recapture Detector (frauddetector)
 
-[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Render-purple?style=for-the-badge)](https://frauddetector.onrender.com)
+[![Live Demo](https://img.shields.io/badge/🚀_Live_)](https://huggingface.co/spaces/sthrrrr/frauddetector)
 [![Python](https://img.shields.io/badge/Python-3.11-blue?style=flat-square&logo=python)](https://python.org)
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-2.21-orange?style=flat-square&logo=tensorflow)](https://tensorflow.org)
 [![Flask](https://img.shields.io/badge/Flask-3.0-lightgrey?style=flat-square&logo=flask)](https://flask.palletsprojects.com)
@@ -16,7 +16,7 @@ The solution was built for a take-home Computer Vision / Machine Learning assign
 
 ## 🚀 Live Demo
 
-**[→ Try the live demo on Render](https://frauddetector.onrender.com)**
+**[→ Try the live demo]([https://frauddetector.onrender.com](https://huggingface.co/spaces/sthrrrr/frauddetector))**
 
 Upload an image or use your camera to instantly detect whether it's a genuine photograph or a photo of a screen.
 
@@ -125,19 +125,6 @@ Open [http://localhost:5000](http://localhost:5000) in your browser.
 
 ---
 
-## Deploy to Render
-
-1. Push this repository to GitHub.
-2. Go to [Render Dashboard](https://dashboard.render.com/).
-3. Click **New → Blueprint** and connect this repository.
-4. Render will auto-detect `render.yaml` and deploy.
-
-Or deploy manually:
-
-1. **New → Web Service** → connect GitHub repo.
-2. **Build command:** `pip install -r demo_requirements.txt`
-3. **Start command:** `gunicorn app:app --bind 0.0.0.0:$PORT --timeout 120 --workers 1`
-4. Set environment variable `PYTHON_VERSION` = `3.11.9`.
 
 ---
 
